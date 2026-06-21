@@ -1,0 +1,15 @@
+# Private / generated data
+blizzard_api.json
+characters.csv
+bis_data.js
+
+# Generated text exports
+bis_diff_*.txt
+
+# Python
+myenv/
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store

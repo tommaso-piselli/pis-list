@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="it" data-theme="tbc">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PIS List - TBC Anniversary</title>
+<style>
+:root{
+  --bg:#141019; --bg-glow:#2a2240; --panel:#1f1b29; --panel2:#26212f; --panel3:#1a1622;
+  --tip-bg:#0f0c15; --line:rgba(230,204,128,.16); --rowline:rgba(255,255,255,.04);
+  --track:rgba(255,255,255,.08); --accent:#e6cc80; --accent-dim:#bda86a;
+  --text:#ece7dc; --muted:#9c95a6;
+  --have:#3fb27d; --have-bg:rgba(63,178,125,.18); --have-bd:rgba(63,178,125,.35);
+  --miss:#d8554f; --miss-bg:rgba(216,85,79,.12); --miss-bd:rgba(216,85,79,.45);
+  --nd:#5a5366; --foc-bg:rgba(230,204,128,.10); --ring:rgba(230,204,128,.18);
+}
+[data-theme="scuro"]{
+  --bg:#1a1a1a; --bg-glow:#232323; --panel:#222222; --panel2:#2b2b2b; --panel3:#1e1e1e;
+  --tip-bg:#161616; --line:rgba(255,255,255,.10); --rowline:rgba(255,255,255,.05);
+  --track:rgba(255,255,255,.10); --accent:#8080ff; --accent-dim:#6f6fe6;
+  --text:#ededed; --muted:#9a9a9a;
+  --have:#8080ff; --have-bg:rgba(128,128,255,.18); --have-bd:rgba(128,128,255,.50);
+  --miss:#8a8a8a; --miss-bg:rgba(255,255,255,.04); --miss-bd:rgba(255,255,255,.22);
+  --nd:#555555; --foc-bg:rgba(128,128,255,.12); --ring:rgba(128,128,255,.28);
+}
+[data-theme="rocco"]{
+  --bg:#2a1320; --bg-glow:#4a1f38; --panel:#38192a; --panel2:#452235; --panel3:#311624;
+  --tip-bg:#1f0e18; --line:rgba(255,160,205,.20); --rowline:rgba(255,180,215,.08);
+  --track:rgba(255,180,215,.14); --accent:#ff7ec0; --accent-dim:#e468a6;
+  --text:#ffe7f1; --muted:#d5a7bd;
+  --have:#ff90c6; --have-bg:rgba(255,144,198,.22); --have-bd:rgba(255,144,198,.50);
+  --miss:#c87ba0; --miss-bg:rgba(255,144,198,.07); --miss-bd:rgba(255,144,198,.32);
+  --nd:#855a70; --foc-bg:rgba(255,126,192,.12); --ring:rgba(255,126,192,.24);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:radial-gradient(1100px 520px at 78% -12%, var(--bg-glow) 0%, var(--bg) 58%) fixed;
+  color:var(--text); -webkit-font-smoothing:antialiased;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px; line-height:1.5;
+}
+.wrap{max-width:1180px; margin:0 auto; padding:30px 20px 90px}
+
+/* header */
+.head{border-bottom:1px solid var(--line); padding-bottom:18px; margin-bottom:16px}
+.title{margin:0; font-weight:600; font-size:30px; letter-spacing:.02em; color:var(--accent);
+  font-family:"Palatino Linotype","Book Antiqua",Palatino,"Iowan Old Style",Georgia,serif;
+  text-shadow:0 1px 0 rgba(0,0,0,.45)}
+.sub{color:var(--muted); margin-top:4px; font-size:13.5px}
+.stats{display:flex; gap:26px; margin-top:16px; flex-wrap:wrap}
+.stat{display:flex; flex-direction:column; line-height:1.1}
+.stat .num{font-size:22px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums}
+.stat .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-top:3px}
+
+/* toolbar: tabs + themes */
+.toolbar{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px}
+.tabs{display:inline-flex; gap:4px; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:3px}
+.tab{background:transparent; border:0; color:var(--muted); font:inherit; cursor:pointer; padding:7px 14px; border-radius:7px; transition:background .15s,color .15s}
+.tab:hover{color:var(--text)}
+.tab.active{background:var(--panel2); color:var(--accent); font-weight:600}
+.themes{display:inline-flex; gap:4px; margin-left:auto; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:3px}
+.tbtn{background:transparent; border:0; color:var(--muted); font:inherit; cursor:pointer; padding:6px 12px; border-radius:7px; transition:background .15s,color .15s}
+.tbtn:hover{color:var(--text)}
+.tbtn.active{background:var(--accent); color:var(--bg); font-weight:600}
+.tbtn:focus-visible,.tab:focus-visible{outline:2px solid var(--accent-dim); outline-offset:1px}
+
+/* controls */
+.controls{display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:14px}
+.inp{background:var(--panel); border:1px solid var(--line); color:var(--text); border-radius:9px; padding:8px 11px; font:inherit; outline:none}
+.inp:focus-visible{border-color:var(--accent-dim); box-shadow:0 0 0 2px var(--ring)}
+#q{min-width:220px}
+.chk{display:inline-flex; align-items:center; gap:7px; color:var(--muted); cursor:pointer; user-select:none}
+.chk input{accent-color:var(--accent-dim); width:16px; height:16px}
+.sortlbl{display:inline-flex; align-items:center; gap:8px; color:var(--muted)}
+.btn{background:var(--panel); border:1px solid var(--line); color:var(--muted); border-radius:9px; padding:8px 12px; font:inherit; cursor:pointer}
+.btn:hover{color:var(--text); border-color:var(--accent-dim)}
+.note{color:var(--muted); font-size:13px}
+
+/* focus panel */
+.focus{background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--accent-dim); border-radius:11px; padding:12px 14px; margin-bottom:14px}
+.ftop{display:flex; align-items:center; justify-content:space-between; gap:12px}
+.ftitle{font-weight:600; color:var(--accent)}
+.fclose{background:transparent; border:1px solid var(--line); color:var(--muted); border-radius:8px; padding:4px 9px; cursor:pointer; font:inherit}
+.fclose:hover{color:var(--text); border-color:var(--accent-dim)}
+.fnone{color:var(--muted); margin-top:8px}
+.flist{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.fitem{background:var(--panel2); border:1px solid var(--line); border-radius:9px; padding:6px 10px; display:flex; gap:8px; align-items:baseline}
+.fname{font-weight:600}
+.fbis{color:var(--accent); font-size:13px}
+
+/* matrix */
+.tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:13px; background:var(--panel)}
+table.matrix{border-collapse:collapse; width:100%; min-width:680px}
+.matrix th,.matrix td{padding:0}
+.matrix thead th{position:sticky; top:0; z-index:2; background:var(--panel2); color:var(--muted); font-weight:600; font-size:12px; border-bottom:1px solid var(--line)}
+th.ph{position:sticky; left:0; z-index:3; text-align:left; padding:10px 14px; min-width:210px}
+th.sh{width:30px; cursor:pointer; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing:.02em; padding:10px 0; user-select:none; transition:color .15s}
+th.sh:hover{color:var(--accent)}
+th.sh.foc{color:var(--bg); background:var(--accent)}
+td.pc{position:sticky; left:0; z-index:1; background:var(--panel); border-bottom:1px solid var(--rowline); padding:8px 14px}
+.row:hover td.pc{background:var(--panel2)}
+.pcin{display:flex; align-items:center; gap:9px; white-space:nowrap; cursor:pointer}
+td.pc:focus-visible{outline:2px solid var(--accent-dim); outline-offset:-2px}
+.chev{color:var(--accent-dim); transition:transform .15s; display:inline-block; width:10px}
+.chev.open{transform:rotate(90deg)}
+.pname{font-weight:600}
+.spec{color:var(--muted); font-size:12px}
+.bar{width:64px; height:6px; border-radius:4px; background:var(--track); overflow:hidden; flex:0 0 auto}
+.bar i{display:block; height:100%; background:linear-gradient(90deg,var(--accent-dim),var(--accent))}
+.count{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px; color:var(--muted)}
+.count.full{color:var(--have)}
+td.cc{padding:2px; text-align:center; border-bottom:1px solid var(--rowline)}
+td.cc.foc{background:var(--foc-bg)}
+.cell{width:24px; height:24px; margin:0 auto; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; transition:opacity .15s}
+.cell.clk{cursor:pointer}
+.cell.have{background:var(--have-bg); color:var(--have); border:1px solid var(--have-bd)}
+.cell.miss{background:var(--miss-bg); border:1px solid var(--miss-bd)}
+.cell.nd{color:var(--nd); border:1px solid transparent}
+.cell.excl{color:var(--muted); border:1px dashed var(--muted); background:transparent; opacity:.6}
+.cell.dim{opacity:.18}
+
+/* error row */
+.errcell{padding:8px 14px; border-bottom:1px solid var(--rowline)}
+.badge.err{background:var(--miss-bg); color:var(--miss); border:1px solid var(--miss-bd); border-radius:6px; padding:2px 8px; font-size:12px; font-weight:600}
+.errmsg{color:var(--muted); font-size:13px; margin-left:8px}
+
+/* detail drawer */
+.detailrow td.detail{background:var(--panel3); border-bottom:1px solid var(--line); padding:14px 16px}
+.dhead{font-weight:600; margin-bottom:10px; color:var(--accent)}
+.dlist{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:8px}
+.ditem{background:var(--panel2); border:1px solid var(--line); border-left:3px solid var(--miss); border-radius:9px; padding:8px 11px}
+.dslot{display:block; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+.dbis{display:block; color:var(--accent); font-weight:600; margin-top:2px}
+.dcur{display:block; color:var(--muted); font-size:12.5px; margin-top:3px}
+
+/* aggregator */
+.aggwrap{border:1px solid var(--line); border-radius:13px; background:var(--panel); overflow:hidden}
+table.agg{border-collapse:collapse; width:100%}
+.agg thead th{background:var(--panel2); color:var(--muted); font-weight:600; font-size:12px; text-align:left; padding:11px 14px; border-bottom:1px solid var(--line)}
+.agg tbody td{padding:11px 14px; border-bottom:1px solid var(--rowline); vertical-align:top}
+.agg tbody tr:hover{background:var(--panel2)}
+.idx{color:var(--muted); font-variant-numeric:tabular-nums; width:34px}
+.oname{font-weight:600}
+.setbadge{display:inline-block; background:var(--foc-bg); color:var(--accent); border:1px solid var(--line); border-radius:5px; font-size:10.5px; font-weight:700; letter-spacing:.08em; padding:1px 6px; margin-right:8px; vertical-align:middle}
+.oslot{color:var(--muted); font-size:13px; white-space:nowrap}
+.cnt{font-variant-numeric:tabular-nums; font-weight:700}
+.who{display:flex; flex-wrap:wrap; gap:6px; margin-top:2px}
+.wchip{background:var(--panel3); border:1px solid var(--line); border-radius:7px; padding:3px 8px; font-size:12.5px}
+
+/* tooltip + misc */
+#tip{position:fixed; z-index:50; pointer-events:none; max-width:280px; background:var(--tip-bg); border:1px solid var(--line); border-radius:9px; padding:9px 11px; box-shadow:0 10px 30px rgba(0,0,0,.5); font-size:13px}
+#tip .tslot{font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:5px}
+#tip .trow{margin-top:2px}
+#tip .trow b{color:var(--text); font-weight:600}
+#tip .trow.ok{color:var(--have)}
+#tip .trow.no{color:var(--miss)}
+#tip .thint{margin-top:6px; color:var(--muted); font-size:11px}
+.empty{border:1px dashed var(--line); border-radius:13px; padding:40px; text-align:center; color:var(--muted)}
+.empty code{color:var(--accent)}
+.foot{color:var(--muted); font-size:12px; margin-top:16px; line-height:1.7}
+.foot b{color:var(--text); font-weight:600}
+.credits{color:var(--muted); font-size:12px; text-align:center; margin-top:28px; padding-top:14px; border-top:1px solid var(--line)}
+.credits a{color:var(--accent-dim); text-decoration:none}
+.credits a:hover{color:var(--accent); text-decoration:underline}
+
+@media (max-width:560px){ th.ph,td.pc{min-width:160px} .spec{display:none} .bar{display:none} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important; animation:none!important} }
+</style>
+</head>
+<body>
+<div class="wrap"><div id="app"></div>
+<div class="foot" id="foot"></div>
+<div class="credits">vibe coded by <a href="https://github.com/tommaso-piselli" target="_blank" rel="noopener">tommaso-piselli</a></div></div>
+<div id="tip" hidden></div>
+
+<!-- config dei set (opzionale): definisce window.BIS_TIERS -->
+<script src="tiers.js"></script>
+<!-- dati generati da bis_diff.py (nome fisso): definisce window.BIS_DATA -->
+<script src="bis_data.js"></script>
+<script>
+"use strict";
+
+/* ---------- storage (persiste tema ed esclusioni; degrada se non disponibile) ---------- */
+const store = {
+  get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+
+const DATA = window.BIS_DATA || null;
+const DEFAULT_TIERS = { groups:{ g1:"Pala / Sham / Rogue", g2:"Warlock / Mage / Hunter", g3:"Warrior / Priest / Druid" }, sets:{} };
+const TIERS = (window.BIS_TIERS && typeof window.BIS_TIERS === "object") ? window.BIS_TIERS : DEFAULT_TIERS;
+
+/* I 5 slot dei set (codici come in SLOT_ABBR lato python): Head, Shoulder, Chest, Hands, Legs */
+const SET_SLOT_CODES = new Set(["Hd","Sh","Ch","Hn","Lg"]);
+
+const app = document.getElementById('app');
+const tip = document.getElementById('tip');
+const foot = document.getElementById('foot');
+
+const state = {
+  view: "roster",
+  q: "",
+  onlyMissing: false,
+  sort: "completion",
+  aggSort: "count_desc",
+  focus: null,
+  expanded: new Set(),
+  excluded: new Set(store.get('bisExcluded') || []),
+  theme: store.get('bisTheme') || 'tbc',
+};
+document.documentElement.dataset.theme = state.theme;
+
+/* ---------- helpers ---------- */
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+function nameOf(c){ return c.player || c.pg; }
+function exKey(c, code){ return c.pg + "@" + (c.realm||"") + "||" + code; }
+function isExcluded(c, code){ return state.excluded.has(exKey(c, code)); }
+
+function counts(c){
+  let total=0, have=0;
+  (c.slots||[]).forEach(s=>{
+    if(s.nd || isExcluded(c, s.code)) return;
+    total++; if(s.have) have++;
+  });
+  return {have, total};
+}
+function pct(c){ const k=counts(c); return k.total ? Math.round(100*k.have/k.total) : 0; }
+function missingSlots(c){ return (c.slots||[]).filter(s=>!s.have && !s.nd && !isExcluded(c, s.code)); }
+
+/* set token: se l'item BiS di uno slot-set contiene una keyword di tiers.js,
+   lo riconduce a un token condiviso (stesso gruppo + stesso slot). */
+function setToken(slot){
+  if(!SET_SLOT_CODES.has(slot.code)) return null;
+  const name = (slot.bis||'').toLowerCase();
+  const sets = TIERS.sets || {};
+  for(const kw in sets){
+    if(kw && name.indexOf(kw.toLowerCase()) !== -1){
+      const g = sets[kw];
+      const glabel = (TIERS.groups||{})[g] || g;
+      return { id:"set|"+g+"|"+slot.code, group:g, glabel:glabel,
+               label:"Token "+slot.name+" ("+glabel+")" };
+    }
+  }
+  return null;
+}
+
+function slotOrderIndex(code){
+  const i = DATA.slots.findIndex(s=>s.code===code);
+  return i<0 ? 99 : i;
+}
+
+/* ---------- shell ---------- */
+function buildShell(){
+  app.innerHTML='';
+  const head=document.createElement('header'); head.className='head';
+  const h1=document.createElement('h1'); h1.className='title'; h1.textContent=DATA.title || "PIS List"; head.appendChild(h1);
+  const sub=document.createElement('div'); sub.className='sub';
+  sub.textContent=(DATA.realm||'')+'  -  '+(DATA.region||'')+'  -  aggiornato '+(DATA.generated||'');
+  head.appendChild(sub);
+  const stats=document.createElement('div'); stats.className='stats'; stats.id='stats'; head.appendChild(stats);
+  app.appendChild(head);
+
+  const tb=document.createElement('div'); tb.className='toolbar';
+  tb.innerHTML =
+    '<div class="tabs">'+
+      '<button class="tab" data-view="roster">Roster</button>'+
+      '<button class="tab" data-view="agg">Mancanti (aggregato)</button>'+
+    '</div>'+
+    '<div class="themes">'+
+      '<button class="tbtn" data-theme="tbc">TBC</button>'+
+      '<button class="tbtn" data-theme="scuro">Scuro</button>'+
+      '<button class="tbtn" data-theme="rocco">ROCCO</button>'+
+    '</div>';
+  app.appendChild(tb);
+
+  const controls=document.createElement('div'); controls.id='controls'; app.appendChild(controls);
+  const body=document.createElement('div'); body.id='body'; app.appendChild(body);
+
+  tb.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{ state.view=b.dataset.view; syncToolbar(); showView(); }));
+  tb.querySelectorAll('.tbtn').forEach(b=>b.addEventListener('click',()=>{
+    state.theme=b.dataset.theme; document.documentElement.dataset.theme=state.theme; store.set('bisTheme',state.theme); syncToolbar();
+  }));
+  syncToolbar();
+
+  foot.innerHTML = '<b>X</b> ce l\'hai (BiS) &nbsp;·&nbsp; <b>vuoto</b> manca &nbsp;·&nbsp; <b>&middot;</b> nessun BiS per lo slot &nbsp;·&nbsp; <b>tratteggio</b> slot escluso<br>'+
+    'Clic sul <b>nome</b> = dettaglio pezzi mancanti &nbsp;|&nbsp; clic su una <b>sigla</b> in alto = chi manca quel pezzo &nbsp;|&nbsp; clic su un <b>quadretto</b> = escludi/reincludi quello slot (per quel personaggio).';
+}
+
+function syncToolbar(){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.view===state.view));
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.toggle('active', b.dataset.theme===state.theme));
+}
+
+/* ---------- stats ---------- */
+function renderStats(){
+  const ok=DATA.characters.filter(c=>!c.error);
+  const done=ok.filter(c=>{ const k=counts(c); return k.total>0 && k.have===k.total; }).length;
+  const avg=ok.length? Math.round(ok.reduce((s,c)=>s+pct(c),0)/ok.length):0;
+  const errs=DATA.characters.length-ok.length;
+  const ex=state.excluded.size;
+  const stats=document.getElementById('stats'); stats.innerHTML='';
+  const mk=(n,l)=>{ const d=document.createElement('div'); d.className='stat';
+    d.innerHTML='<span class="num">'+n+'</span><span class="lbl">'+l+'</span>'; return d; };
+  stats.appendChild(mk(DATA.characters.length,'personaggi'));
+  stats.appendChild(mk(done,'full bis'));
+  stats.appendChild(mk(avg+'%','media'));
+  if(errs) stats.appendChild(mk(errs,'errori'));
+  if(ex) stats.appendChild(mk(ex,'slot esclusi'));
+}
+
+/* ---------- view switch ---------- */
+function showView(){
+  const controls=document.getElementById('controls');
+  controls.className='controls';
+  if(state.view==='roster'){
+    controls.innerHTML=
+      '<input id="q" class="inp" type="search" placeholder="Cerca player, pg o spec..." autocomplete="off">'+
+      '<label class="chk"><input type="checkbox" id="onlymiss"> Solo mancanti</label>'+
+      '<label class="sortlbl">Ordina <select id="sort" class="inp">'+
+        '<option value="completion">Meno completi</option>'+
+        '<option value="completion_desc">Più completi</option>'+
+        '<option value="name">Nome</option></select></label>'+
+      '<button class="btn" id="resetex">Azzera esclusioni</button>';
+    const q=document.getElementById('q'); q.value=state.q;
+    q.addEventListener('input', e=>{ state.q=e.target.value; renderBody(); });
+    const om=document.getElementById('onlymiss'); om.checked=state.onlyMissing;
+    om.addEventListener('change', e=>{ state.onlyMissing=e.target.checked; renderBody(); });
+    const so=document.getElementById('sort'); so.value=state.sort;
+    so.addEventListener('change', e=>{ state.sort=e.target.value; renderBody(); });
+    document.getElementById('resetex').addEventListener('click', ()=>{
+      state.excluded.clear(); store.set('bisExcluded', []); renderBody();
+    });
+  } else {
+    controls.innerHTML=
+      '<label class="sortlbl">Ordina <select id="aggsort" class="inp">'+
+        '<option value="count_desc">Più richiesti</option>'+
+        '<option value="count_asc">Meno richiesti</option>'+
+        '<option value="name">Nome</option>'+
+        '<option value="slot">Slot</option></select></label>'+
+      '<span class="note">I pezzi dei set (token condivisi tra classi) sono uniti in un\'unica voce.</span>';
+    const as=document.getElementById('aggsort'); as.value=state.aggSort;
+    as.addEventListener('change', e=>{ state.aggSort=e.target.value; renderBody(); });
+  }
+  renderBody();
+}
+
+function renderBody(){
+  renderStats();
+  const body=document.getElementById('body'); body.innerHTML='';
+  if(state.view==='roster'){
+    if(state.focus) body.appendChild(focusPanel());
+    body.appendChild(matrix());
+  } else {
+    body.appendChild(aggregator());
+  }
+}
+
+/* ---------- roster: matrix ---------- */
+function sortedChars(){
+  let list=DATA.characters.slice();
+  const q=state.q.trim().toLowerCase();
+  if(q) list=list.filter(c=>(nameOf(c)+' '+c.pg+' '+(c.spec||'')).toLowerCase().includes(q));
+  const byName=(a,b)=>nameOf(a).localeCompare(nameOf(b),'it',{sensitivity:'base'});
+  if(state.sort==='name') list.sort(byName);
+  else if(state.sort==='completion_desc') list.sort((a,b)=>pct(b)-pct(a)||byName(a,b));
+  else list.sort((a,b)=>pct(a)-pct(b)||byName(a,b));
+  return list;
+}
+
+function detailPanel(c){
+  const w=document.createElement('div'); w.className='dpanel';
+  const missing=missingSlots(c);
+  const h=document.createElement('div'); h.className='dhead';
+  h.textContent = missing.length? ('Mancano '+missing.length+' pezzi') : 'Nessun pezzo mancante (per gli slot considerati).';
+  w.appendChild(h);
+  if(missing.length){
+    const list=document.createElement('div'); list.className='dlist';
+    missing.forEach(s=>{ const it=document.createElement('div'); it.className='ditem';
+      it.innerHTML='<span class="dslot">'+esc(s.name)+'</span>'+
+        '<span class="dbis">'+esc(s.bis)+'</span>'+
+        '<span class="dcur">hai: '+esc(s.current)+'</span>'; list.appendChild(it); });
+    w.appendChild(list);
+  }
+  return w;
+}
+
+function matrix(){
+  const wrap=document.createElement('div'); wrap.className='tablewrap';
+  const slots=DATA.slots;
+  const table=document.createElement('table'); table.className='matrix';
+  const thead=document.createElement('thead'); const tr=document.createElement('tr');
+  const th0=document.createElement('th'); th0.className='ph'; th0.textContent='Player'; tr.appendChild(th0);
+  slots.forEach(s=>{ const th=document.createElement('th'); th.className='sh'+(state.focus===s.code?' foc':'');
+    th.textContent=s.code; th.title=s.name;
+    th.addEventListener('click', ()=>{ state.focus=(state.focus===s.code?null:s.code); renderBody(); });
+    tr.appendChild(th); });
+  thead.appendChild(tr); table.appendChild(thead);
+
+  const tbody=document.createElement('tbody');
+  sortedChars().forEach(c=>{
+    const row=document.createElement('tr'); row.className='row';
+    const tdP=document.createElement('td'); tdP.className='pc';
+    if(c.error){
+      tdP.innerHTML='<div class="pcin"><span class="pname">'+esc(nameOf(c))+'</span></div>';
+      row.appendChild(tdP);
+      const tdE=document.createElement('td'); tdE.className='errcell'; tdE.colSpan=slots.length;
+      tdE.innerHTML='<span class="badge err">errore</span><span class="errmsg">'+esc(c.error)+'</span>';
+      row.appendChild(tdE); tbody.appendChild(row); return;
+    }
+    const p=pct(c); const k=counts(c); const open=state.expanded.has(c.pg);
+    tdP.tabIndex=0; tdP.setAttribute('role','button'); tdP.setAttribute('aria-expanded', open?'true':'false');
+    tdP.innerHTML='<div class="pcin">'+
+      '<span class="chev '+(open?'open':'')+'">&#9656;</span>'+
+      '<span class="pname">'+esc(nameOf(c))+'</span>'+
+      '<span class="spec">'+esc(c.spec||'')+'</span>'+
+      '<span class="bar"><i style="width:'+p+'%"></i></span>'+
+      '<span class="count '+(k.have===k.total&&k.total>0?'full':'')+'">'+k.have+'/'+k.total+'</span></div>';
+    const toggle=()=>{ open? state.expanded.delete(c.pg): state.expanded.add(c.pg); renderBody(); };
+    tdP.querySelector('.pcin').addEventListener('click', toggle);
+    tdP.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+    row.appendChild(tdP);
+
+    c.slots.forEach(s=>{
+      const td=document.createElement('td'); td.className='cc'+(state.focus===s.code?' foc':'');
+      const ex=isExcluded(c, s.code);
+      const cell=document.createElement('div');
+      let cls='cell '+(ex?'excl':(s.nd?'nd':(s.have?'have':'miss')));
+      if(state.onlyMissing && s.have && !ex) cls+=' dim';
+      if(!s.nd) cls+=' clk';
+      cell.className=cls;
+      cell.textContent = ex?'\u2013':(s.nd?'\u00b7':(s.have?'\u2713':''));
+      cell.dataset.slot=s.name; cell.dataset.bis=s.bis; cell.dataset.cur=s.current;
+      cell.dataset.have=s.have?'1':'0'; cell.dataset.ex=ex?'1':'0';
+      if(!s.nd){ cell.addEventListener('click', ()=>{
+        const key=exKey(c, s.code);
+        if(state.excluded.has(key)) state.excluded.delete(key); else state.excluded.add(key);
+        store.set('bisExcluded', Array.from(state.excluded)); renderBody();
+      }); }
+      td.appendChild(cell); row.appendChild(td);
+    });
+    tbody.appendChild(row);
+    if(open){ const dr=document.createElement('tr'); dr.className='detailrow';
+      const td=document.createElement('td'); td.colSpan=slots.length+1; td.className='detail';
+      td.appendChild(detailPanel(c)); dr.appendChild(td); tbody.appendChild(dr); }
+  });
+  table.appendChild(tbody); wrap.appendChild(table);
+  return wrap;
+}
+
+function focusPanel(){
+  const fp=document.createElement('div'); fp.className='focus';
+  const meta=DATA.slots.find(s=>s.code===state.focus)||{}; const slotName=meta.name||state.focus;
+  const missers=DATA.characters.filter(c=>!c.error)
+    .map(c=>({c, s:(c.slots||[]).find(x=>x.code===state.focus)}))
+    .filter(o=>o.s && !o.s.have && !o.s.nd && !isExcluded(o.c, state.focus));
+  const top=document.createElement('div'); top.className='ftop';
+  top.innerHTML='<span class="ftitle">Chi manca: '+esc(slotName)+'</span>'+
+    '<button class="fclose">chiudi &times;</button>';
+  fp.appendChild(top);
+  top.querySelector('.fclose').addEventListener('click', ()=>{ state.focus=null; renderBody(); });
+  if(!missers.length){ const d=document.createElement('div'); d.className='fnone';
+    d.textContent='Nessuno: tutti hanno il BiS (o lo slot e\' escluso).'; fp.appendChild(d); }
+  else { const list=document.createElement('div'); list.className='flist';
+    missers.forEach(o=>{ const it=document.createElement('div'); it.className='fitem';
+      it.innerHTML='<span class="fname">'+esc(nameOf(o.c))+'</span><span class="fbis">'+esc(o.s.bis)+'</span>';
+      list.appendChild(it); });
+    fp.appendChild(list); }
+  return fp;
+}
+
+/* ---------- aggregator ---------- */
+function buildAgg(){
+  const map=new Map();
+  DATA.characters.forEach(c=>{
+    if(c.error) return;
+    missingSlots(c).forEach(s=>{
+      const tok=setToken(s);
+      const key = tok ? tok.id : ('item|'+s.code+'|'+(s.bis||'').toLowerCase());
+      if(!map.has(key)) map.set(key, { isSet:!!tok, label: tok?tok.label:s.bis,
+        slot:s.name, slotCode:s.code, entries:[] });
+      map.get(key).entries.push({ player:nameOf(c), item:s.bis });
+    });
+  });
+  let arr=Array.from(map.values()).map(e=>({ ...e, count:e.entries.length }));
+  const byName=(a,b)=>a.label.localeCompare(b.label,'it',{sensitivity:'base'});
+  if(state.aggSort==='name') arr.sort(byName);
+  else if(state.aggSort==='slot') arr.sort((a,b)=>slotOrderIndex(a.slotCode)-slotOrderIndex(b.slotCode)||b.count-a.count);
+  else if(state.aggSort==='count_asc') arr.sort((a,b)=>a.count-b.count||byName(a,b));
+  else arr.sort((a,b)=>b.count-a.count||byName(a,b));
+  return arr;
+}
+
+function aggregator(){
+  const wrap=document.createElement('div'); wrap.className='aggwrap';
+  const arr=buildAgg();
+  if(!arr.length){
+    const e=document.createElement('div'); e.className='empty';
+    e.textContent='Nessun pezzo mancante tra i personaggi (o tutto escluso).'; wrap.appendChild(e); return wrap;
+  }
+  const table=document.createElement('table'); table.className='agg';
+  table.innerHTML='<thead><tr><th>#</th><th>Oggetto</th><th>Slot</th><th>Persone</th><th>Chi</th></tr></thead>';
+  const tb=document.createElement('tbody');
+  arr.forEach((e,i)=>{
+    const tr=document.createElement('tr');
+    const who=e.entries.map(en=>'<span class="wchip" title="'+esc(en.item)+'">'+esc(en.player)+'</span>').join('');
+    tr.innerHTML=
+      '<td class="idx">'+(i+1)+'</td>'+
+      '<td><span class="oname">'+(e.isSet?'<span class="setbadge">SET</span>':'')+esc(e.label)+'</span></td>'+
+      '<td class="oslot">'+esc(e.slot)+'</td>'+
+      '<td class="cnt">'+e.count+'</td>'+
+      '<td><div class="who">'+who+'</div></td>';
+    tb.appendChild(tr);
+  });
+  table.appendChild(tb); wrap.appendChild(table);
+  return wrap;
+}
+
+/* ---------- tooltip ---------- */
+document.addEventListener('mousemove', e=>{
+  const cell=e.target.closest? e.target.closest('.cell'): null;
+  if(!cell){ tip.hidden=true; return; }
+  if(cell.dataset.ex==='1'){
+    tip.innerHTML='<div class="tslot">'+esc(cell.dataset.slot)+'</div><div class="trow">Slot escluso</div><div class="thint">clic per reincludere</div>';
+  } else {
+    const have=cell.dataset.have==='1';
+    tip.innerHTML='<div class="tslot">'+esc(cell.dataset.slot)+'</div>'+
+      '<div class="trow"><b>BiS:</b> '+esc(cell.dataset.bis)+'</div>'+
+      '<div class="trow '+(have?'ok':'no')+'"><b>Tuo:</b> '+esc(cell.dataset.cur)+'</div>'+
+      '<div class="thint">clic per escludere questo slot</div>';
+  }
+  tip.hidden=false;
+  const pad=14, r=tip.getBoundingClientRect();
+  let x=e.clientX+pad, y=e.clientY+pad;
+  if(x+r.width>window.innerWidth-8) x=e.clientX-r.width-pad;
+  if(y+r.height>window.innerHeight-8) y=e.clientY-r.height-pad;
+  tip.style.left=x+'px'; tip.style.top=y+'px';
+});
+
+/* ---------- init ---------- */
+if(!DATA || !DATA.characters || !DATA.characters.length){
+  app.innerHTML='<div class="empty">Nessun dato trovato.<br><br>Esegui <code>bis_diff.py</code> nella stessa cartella per generare <code>bis_data.js</code>, poi ricarica questa pagina.</div>';
+  foot.innerHTML='';
+} else {
+  buildShell();
+  showView();
+}
+</script>
+</body>
+</html>
