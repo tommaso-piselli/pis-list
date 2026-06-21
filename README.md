@@ -1,4 +1,4 @@
-# pis-list
+# Pis List
 
 A small **best-in-slot (BiS) roster tracker** for a *World of Warcraft: The Burning Crusade
 (TBC) Anniversary* guild. It compares each character's **currently equipped gear** (from the
